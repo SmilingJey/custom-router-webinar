@@ -1,11 +1,20 @@
 
-import { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Settings from './pages/Settings';
 
-function Route({ path, currentPath, children }) {
+const RouterContext = React.createContext({ currentPath: '/' });
+
+function Router({ currentPath, children }) {
+	return <RouterContext.Provider value={{ currentPath }}>
+		{children}
+	</RouterContext.Provider>;
+}
+
+function Route({ path, children }) {
+	const { currentPath } = useContext(RouterContext);
 	return currentPath === path && children;
 }
 
@@ -16,9 +25,11 @@ function App() {
   return (
     <>
       <input value={url} onChange={handleChange} />
-      <Route path="/home" currentPath={url}><Home /></Route>
-		  <Route path="/login" currentPath={url}><Login /></Route>
-	  	<Route path="/settings" currentPath={url}><Settings /></Route>
+      <Router currentPath={url}>
+			<Route path="/home"><Home /></Route>
+			<Route path="/login"><Login /></Route>
+			<Route path="/settings"><Settings /></Route>
+		</Router>
 	  </>
   );
 }
