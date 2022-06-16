@@ -1,12 +1,22 @@
-import React, { useState, useContext } from "react";
+import { ownHistory } from './history';
+
+import React, { useState, useContext, useEffect } from "react";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Settings from "./pages/Settings";
 
-const RouterContext = React.createContext({ currentPath: "/" });
+const RouterContext = React.createContext({ currentPath: window.location.pathname });
 
-function Router({ currentPath, children }) {
+function Router({ children }) {
+	const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+	useEffect(() => {
+		return ownHistory.listen((location) => {
+			setCurrentPath(location);
+		});
+	}, []);
+
   return (
     <RouterContext.Provider value={{ currentPath }}>
       {children}
@@ -22,8 +32,7 @@ function Route({ path, children }) {
 function Link({ href, children }) {
 	function handleClick(e) {
 		e.preventDefault();
-    //https://developer.mozilla.org/ru/docs/Web/API/History
-		window.history.pushState(null, '', href);
+		ownHistory.pushState(href);
 	}
 
 	return (<a onClick={handleClick} href={href}>{children}</a>);
@@ -40,7 +49,7 @@ function App() {
       <Link href="/login">Login</Link>
       <Link href="/settings">Settings</Link>
 
-      <Router currentPath={url}>
+      <Router>
         <Route path="/home">
           <Home />
         </Route>
