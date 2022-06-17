@@ -39,12 +39,12 @@ function Link({ href, children }) {
 }
 
 function App() {
-  const [url, setUrl] = useState("");
-  const handleChange = (e) => setUrl(e.target.value);
+  //const [url, setUrl] = useState("");
+  //const handleChange = (e) => setUrl(e.target.value);
 
   return (
     <>
-      <input value={url} onChange={handleChange} />
+      {/*<input value={url} onChange={handleChange} />*/}
       <Link href="/home">Home</Link>
       <Link href="/login">Login</Link>
       <Link href="/settings">Settings</Link>
